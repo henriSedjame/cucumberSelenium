@@ -1,6 +1,5 @@
 package shj.training.cucumber.stepDefinitions;
 
-import cucumber.api.PendingException;
 import cucumber.api.java8.En;
 import org.junit.Assert;
 import org.openqa.selenium.By;
@@ -15,25 +14,37 @@ public class LoginDefinitionSteps implements En {
 
   public LoginDefinitionSteps() {
 
+    Before(() -> {
+      System.out.println("Test begins .....");
+    });
     Given("^user is already in login page$", () -> {
       System.setProperty("webdriver.chrome.driver","D:\\chromedriver_win32\\chromedriver.exe");
       driver = new ChromeDriver();
       driver.get("https://www.freecrm.com");
 
     });
+    And("^user enters ([^\"]*) and ([^\"]*)$", (String username, String password) -> {
+      driver.findElement(By.name("username")).sendKeys(username);
+      driver.findElement(By.name("password")).sendKeys(password);
+    });
 
     When("^user click on login$", () -> {
-      driver.findElement(By.name("username")).sendKeys("hsedjame");
-      driver.findElement(By.name("password")).sendKeys("hiphop!87");
       WebElement loginBtn = driver.findElement(By.xpath("//input[@type='submit']"));
       JavascriptExecutor js = (JavascriptExecutor) driver;
       js.executeScript("arguments[0].click();", loginBtn);
     });
 
-    Then("^system redirect to resource$", () -> {
+    Then("^system redirect to home page$", () -> {
       String pageTitle = driver.getTitle();
       Assert.assertEquals("CRMPRO", pageTitle);
+
     });
+
+    After(() -> {
+      System.out.println("Test ends ...");
+      driver.close();
+    });
+
 
   }
 }
