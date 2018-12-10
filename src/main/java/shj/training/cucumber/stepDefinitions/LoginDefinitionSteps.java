@@ -2,36 +2,36 @@ package shj.training.cucumber.stepDefinitions;
 
 import cucumber.api.java8.En;
 import org.junit.Assert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import shj.training.cucumber.page.models.LoginPage;
 
 public class LoginDefinitionSteps implements En {
 
   WebDriver driver;
+  LoginPage loginPage;
 
   public LoginDefinitionSteps() {
 
     Before(() -> {
       System.out.println("Test begins .....");
-    });
-    Given("^user is already in login page$", () -> {
       System.setProperty("webdriver.chrome.driver","D:\\chromedriver_win32\\chromedriver.exe");
       driver = new ChromeDriver();
+      loginPage = new LoginPage(driver);
+    });
+
+    Given("^user is already in login page$", () -> {
+
       driver.get("https://www.freecrm.com");
 
     });
+
     And("^user enters ([^\"]*) and ([^\"]*)$", (String username, String password) -> {
-      driver.findElement(By.name("username")).sendKeys(username);
-      driver.findElement(By.name("password")).sendKeys(password);
+      loginPage.fillCredentials(username, password);
     });
 
     When("^user click on login$", () -> {
-      WebElement loginBtn = driver.findElement(By.xpath("//input[@type='submit']"));
-      JavascriptExecutor js = (JavascriptExecutor) driver;
-      js.executeScript("arguments[0].click();", loginBtn);
+      loginPage.clickLoginBtn();
     });
 
     Then("^system redirect to home page$", () -> {

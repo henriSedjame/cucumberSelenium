@@ -9,4 +9,3 @@ Feature: Connexion
     Examples:
       | username | password  |
       | hsedjame | hiphop!87 |
-
